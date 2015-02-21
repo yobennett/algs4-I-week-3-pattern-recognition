@@ -31,39 +31,48 @@ public class Point implements Comparable<Point> {
     public double slopeTo(Point that) {
 
         // vertical line
-        if (this.x == that.x) {
+        if (this.x - that.x == 0) {
             // degenerate
-            if (this.y == that.y) {
+            if (this.y - that.y == 0) {
                 return Double.NEGATIVE_INFINITY;
             }
             return Double.POSITIVE_INFINITY;
         }
 
         // horizontal line
-        if (this.y == that.y) {
+        if (this.y - that.y == 0) {
             return 0.0;
         }
 
-        return (that.y - this.y) / (that.x - this.x);
+        return ((double)that.y - (double)this.y) / ((double)that.x - (double)this.x);
     }
 
     // is this point lexicographically smaller than that one?
     // comparing y-coordinates and breaking ties by x-coordinates
     public int compareTo(Point that) {
-        if (this.y <= that.y && this.x < that.x) {
-            return -1;
-        } else if (this.y == that.y && this.x == that.x) {
+        if (this.x == that.x && this.y == that.y) {
             return 0;
+        } else if (this.y < that.y || this.y == that.y && this.x < that.x) {
+            return -1;
         } else {
             return 1;
         }
     }
 
-    private static class BySlopeOrder implements Comparator<Point> {
+    private class BySlopeOrder implements Comparator<Point> {
 
         @Override
         public int compare(Point o1, Point o2) {
-            return o1.compareTo(o2);
+            double slope1 = Point.this.slopeTo(o1);
+            double slope2 = Point.this.slopeTo(o2);
+
+            if (slope1 < slope2) {
+                return -1;
+            } else if (slope2 < slope1) {
+                return 1;
+            } else {
+                return o1.compareTo(o2);
+            }
         }
     }
 
@@ -83,6 +92,10 @@ public class Point implements Comparable<Point> {
 
         Point p1 = new Point(4096, 20992);
         Point p2 = new Point(5120, 20992);
+
+        System.out.println(p1.compareTo(p2));
+        System.out.println(p2.compareTo(p1));
+
         p1.draw();
         p2.draw();
         p1.drawTo(p2);

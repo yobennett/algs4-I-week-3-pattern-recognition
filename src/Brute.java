@@ -1,5 +1,8 @@
+import java.util.Arrays;
+
 public class Brute {
 
+    /*
     private static int factorial(int n) {
         if (n <= 1) {
             return 1;
@@ -11,6 +14,7 @@ public class Brute {
     public static int choose(int n, int k) {
         return factorial(n) / (factorial(k) * factorial(n - k));
     }
+    */
 
     public static void main(String[] args) {
 
@@ -33,9 +37,47 @@ public class Brute {
             points[i] = p;
         }
 
-        // array of N choose 4
-        int k = 4;
-        Point[] combinations = new Point[choose(N, k)];
+        for (int i = 0; i < N; i++) {
+
+            Point p = points[i];
+
+            for (int j = i + 1; j < N; j++) {
+
+                Point q = points[j];
+                double pqSlope = p.slopeTo(q);
+
+                for (int k = j + 1; k < N; k++) {
+
+                    Point r = points[k];
+                    double prSlope = p.slopeTo(r);
+
+                    if (pqSlope == prSlope) {
+
+                        for (int l = k + 1; l < N; l++) {
+
+                            Point s = points[l];
+                            double psSlope = p.slopeTo(s);
+
+                            if (pqSlope == psSlope) {
+                                p.drawTo(q);
+                                p.drawTo(r);
+                                p.drawTo(s);
+
+                                Point[] segment = {p, q, r, s};
+                                Arrays.sort(segment);
+
+                                StdOut.printf("%s -> %s -> %s -> %s\n", segment[0], segment[1], segment[2], segment[3]);
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
 
         // display to screen all at once
         StdDraw.show(0);
