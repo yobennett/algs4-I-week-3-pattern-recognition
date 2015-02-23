@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Fast {
 
-    public static void findCollinearPoints(Point[] points) {
+    private static void findCollinearPoints(Point[] points) {
 
         Set<ArrayList<Point>> results = new HashSet<ArrayList<Point>>();
 
