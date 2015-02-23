@@ -2,10 +2,13 @@ import java.util.*;
 
 public class Fast {
 
+    private Set<ArrayList<Point>> results;
+
     public Fast(Point[] points) {
 
+        results = new HashSet<ArrayList<Point>>();
+
         Point[] otherPoints = points.clone();
-        Set<LinkedList<Point>> results = new HashSet<LinkedList<Point>>();
 
         for (Point p : points) {
 
@@ -25,7 +28,7 @@ public class Fast {
                 }
 
                 double pqSlope = p.slopeTo(q);
-                LinkedList<Point> collinearPoints = new LinkedList<Point>();
+                ArrayList<Point> collinearPoints = new ArrayList<Point>();
                 collinearPoints.add(p); // add invoking point
                 while (p.slopeTo(otherPoints[i]) == pqSlope && (i < otherPoints.length - 1)) {
                     collinearPoints.add(otherPoints[i]);
@@ -41,34 +44,37 @@ public class Fast {
 
         }
 
-        String delimiter = " -> ";
-        for (LinkedList<Point> lineSegment : results) {
-
-            StringBuilder sb = new StringBuilder();
-            Iterator iterator = lineSegment.listIterator();
-            while (iterator.hasNext()) {
-                sb.append(iterator.next());
-                if (iterator.hasNext()) {
-                    sb.append(delimiter);
-                }
-            }
-
-            StdOut.println(sb.toString());
-
-            drawLineSegment(lineSegment);
-        }
-
     }
 
-    private void drawLineSegment(LinkedList<Point> lineSegment) {
-        Iterator<Point> iterator = lineSegment.listIterator();
-        List<Point> lineSegmentPoints = new ArrayList<Point>();
-        while (iterator.hasNext()) {
-            lineSegmentPoints.add(iterator.next());
+    public void report() {
+        reportLineSegments(results);
+    }
+
+    private void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
+        for (ArrayList<Point> lineSegment : lineSegments) {
+            printLineSegment(lineSegment);
+            drawLineSegment(lineSegment);
         }
-        for (int i = 0; i < lineSegmentPoints.size() - 1; i++) {
-            Point p1 = lineSegmentPoints.get(i);
-            Point p2 = lineSegmentPoints.get(i + 1);
+    }
+
+    private void printLineSegment(ArrayList<Point> lineSegment) {
+        String delimiter = " -> ";
+        StringBuilder sb = new StringBuilder();
+        Iterator iterator = lineSegment.listIterator();
+        while (iterator.hasNext()) {
+            sb.append(iterator.next());
+            if (iterator.hasNext()) {
+                sb.append(delimiter);
+            }
+        }
+
+        StdOut.println(sb.toString());
+    }
+
+    private void drawLineSegment(ArrayList<Point> lineSegment) {
+        for (int i = 0; i < lineSegment.size() - 1; i++) {
+            Point p1 = lineSegment.get(i);
+            Point p2 = lineSegment.get(i + 1);
             p1.drawTo(p2);
         }
     }
@@ -97,7 +103,7 @@ public class Fast {
     public static void main(String[] args) {
         setupDraw();
         Point[] points = readInput(args[0]);
-        new Fast(points);
+        new Fast(points).report();
     }
 
 }
