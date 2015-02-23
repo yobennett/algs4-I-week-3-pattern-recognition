@@ -2,11 +2,9 @@ import java.util.*;
 
 public class Fast {
 
-    private Set<ArrayList<Point>> results;
+    public static void findCollinearPoints(Point[] points) {
 
-    public Fast(Point[] points) {
-
-        results = new HashSet<ArrayList<Point>>();
+        Set<ArrayList<Point>> results = new HashSet<ArrayList<Point>>();
 
         Point[] otherPoints = points.clone();
 
@@ -44,20 +42,17 @@ public class Fast {
 
         }
 
-    }
-
-    public void report() {
         reportLineSegments(results);
     }
 
-    private void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
+    private static void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
         for (ArrayList<Point> lineSegment : lineSegments) {
             printLineSegment(lineSegment);
             drawLineSegment(lineSegment);
         }
     }
 
-    private void printLineSegment(ArrayList<Point> lineSegment) {
+    private static void printLineSegment(ArrayList<Point> lineSegment) {
         String delimiter = " -> ";
         StringBuilder sb = new StringBuilder();
         Iterator iterator = lineSegment.listIterator();
@@ -71,7 +66,7 @@ public class Fast {
         StdOut.println(sb.toString());
     }
 
-    private void drawLineSegment(ArrayList<Point> lineSegment) {
+    private static void drawLineSegment(ArrayList<Point> lineSegment) {
         for (int i = 0; i < lineSegment.size() - 1; i++) {
             Point p1 = lineSegment.get(i);
             Point p2 = lineSegment.get(i + 1);
@@ -103,7 +98,7 @@ public class Fast {
     public static void main(String[] args) {
         setupDraw();
         Point[] points = readInput(args[0]);
-        new Fast(points).report();
+        findCollinearPoints(points);
     }
 
 }
