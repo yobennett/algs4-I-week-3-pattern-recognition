@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class Fast {
 
@@ -6,19 +11,19 @@ public class Fast {
 
         Set<ArrayList<Point>> results = new HashSet<ArrayList<Point>>();
 
-        Point[] otherPoints = points.clone();
+        Point[] aux = points.clone();
 
         for (Point p : points) {
 
             // sort other points by slope wrt to p
-            Arrays.sort(otherPoints, p.SLOPE_ORDER);
+            Arrays.sort(aux, p.SLOPE_ORDER);
 
             // look for 3+ adjacent points with same slope
             // print each line segment as ordered sequence
             // and draw each segment
-            for (int i = 0; i < otherPoints.length; i++) {
+            for (int i = 0; i < aux.length; i++) {
 
-                Point q = otherPoints[i];
+                Point q = aux[i];
 
                 // short circuit if invoking point
                 if (p == q) {
@@ -28,8 +33,8 @@ public class Fast {
                 double pqSlope = p.slopeTo(q);
                 ArrayList<Point> collinearPoints = new ArrayList<Point>();
                 collinearPoints.add(p); // add invoking point
-                while (p.slopeTo(otherPoints[i]) == pqSlope && (i < otherPoints.length - 1)) {
-                    collinearPoints.add(otherPoints[i]);
+                while (p.slopeTo(aux[i]) == pqSlope && (i < aux.length - 1)) {
+                    collinearPoints.add(aux[i]);
                     i++;
                 }
 
