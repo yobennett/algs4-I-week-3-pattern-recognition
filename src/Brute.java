@@ -39,9 +39,14 @@ public class Brute {
                                 p.drawTo(q);
                                 p.drawTo(r);
                                 p.drawTo(s);
-                                Point[] segment = {p, q, r, s};
-                                Arrays.sort(segment);
-                                StdOut.printf("%s -> %s -> %s -> %s\n", segment[0], segment[1], segment[2], segment[3]);
+                                Point[] seg = {p, q, r, s};
+                                Arrays.sort(seg);
+                                StdOut.printf("%s -> %s -> %s -> %s\n",
+                                        seg[0],
+                                        seg[1],
+                                        seg[2],
+                                        seg[3]
+                                );
                             }
                         }
                     }
