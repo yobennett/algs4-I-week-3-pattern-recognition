@@ -33,9 +33,10 @@ public class Fast {
                 double pqSlope = p.slopeTo(q);
                 ArrayList<Point> collinearPoints = new ArrayList<Point>();
                 collinearPoints.add(p); // add invoking point
-                while (p.slopeTo(aux[i]) == pqSlope && (i < aux.length - 1)) {
-                    collinearPoints.add(aux[i]);
-                    i++;
+                int j = i;
+                while (p.slopeTo(aux[j]) == pqSlope && (j < aux.length - 1)) {
+                    collinearPoints.add(aux[j]);
+                    j++;
                 }
 
                 if (collinearPoints.size() >= 4) {
