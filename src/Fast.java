@@ -9,46 +9,65 @@ public class Fast {
 
     private static void findCollinearPoints(Point[] points) {
 
-        Set<ArrayList<Point>> results = new HashSet<ArrayList<Point>>();
+        Set<ArrayList<Point>> lineSegments = new HashSet<ArrayList<Point>>();
 
         Point[] aux = points.clone();
 
         for (Point p : points) {
 
+//            StdOut.printf("\np: %s\n", p);
+
             // sort other points by slope wrt to p
             Arrays.sort(aux, p.SLOPE_ORDER);
 
-            // look for 3+ adjacent points with same slope
-            // print each line segment as ordered sequence
-            // and draw each segment
-            for (int i = 0; i < aux.length; i++) {
-
-                Point q = aux[i];
-
-                // short circuit if invoking point
-                if (p == q) {
-                    continue;
-                }
-
-                double pqSlope = p.slopeTo(q);
-                ArrayList<Point> collinearPoints = new ArrayList<Point>();
-                collinearPoints.add(p); // add invoking point
-                int j = i;
-                while (p.slopeTo(aux[j]) == pqSlope && (j < aux.length - 1)) {
-                    collinearPoints.add(aux[j]);
-                    j++;
-                }
-
-                if (collinearPoints.size() >= 4) {
-                    Collections.sort(collinearPoints);
-                    results.add(collinearPoints);
-                }
-
-            }
+            lineSegments.addAll(foo(p, aux));
 
         }
 
-        reportLineSegments(results);
+        reportLineSegments(lineSegments);
+    }
+
+    private static Set<ArrayList<Point>> foo(Point p, Point[] aux) {
+        return foo(p, aux, 1, new HashSet<ArrayList<Point>>());
+    }
+
+    private static Set<ArrayList<Point>> foo(Point p, Point[] aux, int i, Set<ArrayList<Point>> results) {
+
+//        System.out.println("^ i="+i);
+
+        if (i > aux.length - 1) {
+            return results;
+        }
+
+        Point q = aux[i];
+
+        // short circuit if invoking point
+        if (p == q) {
+            return results;
+        }
+
+        double pqSlope = p.slopeTo(q);
+//        StdOut.printf("q: %s, pqSlope: %s\n", q, pqSlope);
+        ArrayList<Point> collinearPoints = new ArrayList<Point>();
+        collinearPoints.add(p); // add invoking point
+        int j = i;
+        while ((j < aux.length) && p.slopeTo(aux[j]) == pqSlope) {
+//            StdOut.printf("j: %s, aux[j]: %s, slope: %s\n", j, aux[j], p.slopeTo(aux[j]));
+            collinearPoints.add(aux[j]);
+            j++;
+        }
+
+        if (collinearPoints.size() >= 4) {
+            Collections.sort(collinearPoints);
+            results.add(collinearPoints);
+//            StdOut.printf("* line segment with size: %s\n", collinearPoints.size());
+//            printLineSegment(collinearPoints);
+//            System.out.println();
+        } else {
+//            System.out.println("No line segments found.");
+        }
+
+        return foo(p, aux, j, results);
     }
 
     private static void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
