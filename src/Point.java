@@ -35,8 +35,9 @@ public class Point implements Comparable<Point> {
             // degenerate
             if (this.y - that.y == 0) {
                 return Double.NEGATIVE_INFINITY;
+            } else {
+                return Double.POSITIVE_INFINITY;
             }
-            return Double.POSITIVE_INFINITY;
         }
 
         // horizontal line
