@@ -14,26 +14,23 @@ public class Fast {
         Point[] aux = points.clone();
 
         for (Point p : points) {
-
-//            StdOut.printf("\np: %s\n", p);
-
             // sort other points by slope wrt to p
             Arrays.sort(aux, p.SLOPE_ORDER);
 
-            lineSegments.addAll(foo(p, aux));
-
+            // aggregate collinear line segments
+            lineSegments.addAll(findCollinearPointsFor(p, aux));
         }
 
         reportLineSegments(lineSegments);
     }
 
-    private static Set<ArrayList<Point>> foo(Point p, Point[] aux) {
-        return foo(p, aux, 1, new HashSet<ArrayList<Point>>());
+    private static Set<ArrayList<Point>> findCollinearPointsFor(
+            Point p, Point[] aux) {
+        return findCollinearPointsFor(p, aux, 1, new HashSet<ArrayList<Point>>());
     }
 
-    private static Set<ArrayList<Point>> foo(Point p, Point[] aux, int i, Set<ArrayList<Point>> results) {
-
-//        System.out.println("^ i="+i);
+    private static Set<ArrayList<Point>> findCollinearPointsFor(
+            Point p, Point[] aux, int i, Set<ArrayList<Point>> results) {
 
         if (i > aux.length - 1) {
             return results;
@@ -47,12 +44,10 @@ public class Fast {
         }
 
         double pqSlope = p.slopeTo(q);
-//        StdOut.printf("q: %s, pqSlope: %s\n", q, pqSlope);
         ArrayList<Point> collinearPoints = new ArrayList<Point>();
         collinearPoints.add(p); // add invoking point
         int j = i;
         while ((j < aux.length) && p.slopeTo(aux[j]) == pqSlope) {
-//            StdOut.printf("j: %s, aux[j]: %s, slope: %s\n", j, aux[j], p.slopeTo(aux[j]));
             collinearPoints.add(aux[j]);
             j++;
         }
@@ -60,14 +55,9 @@ public class Fast {
         if (collinearPoints.size() >= 4) {
             Collections.sort(collinearPoints);
             results.add(collinearPoints);
-//            StdOut.printf("* line segment with size: %s\n", collinearPoints.size());
-//            printLineSegment(collinearPoints);
-//            System.out.println();
-        } else {
-//            System.out.println("No line segments found.");
         }
 
-        return foo(p, aux, j, results);
+        return findCollinearPointsFor(p, aux, j, results);
     }
 
     private static void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
