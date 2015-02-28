@@ -82,11 +82,7 @@ public class Fast {
     }
 
     private static void drawLineSegment(ArrayList<Point> lineSegment) {
-        for (int i = 0; i < lineSegment.size() - 1; i++) {
-            Point p1 = lineSegment.get(i);
-            Point p2 = lineSegment.get(i + 1);
-            p1.drawTo(p2);
-        }
+        Collections.min(lineSegment).drawTo(Collections.max(lineSegment));
     }
 
     private static void setupDraw() {
