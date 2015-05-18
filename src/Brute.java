@@ -36,17 +36,14 @@ public class Brute {
                             Point s = points[l];
                             double psSlope = p.slopeTo(s);
                             if (pqSlope == psSlope) {
-                                p.drawTo(q);
-                                p.drawTo(r);
-                                p.drawTo(s);
-                                Point[] seg = {p, q, r, s};
-                                Arrays.sort(seg);
+                                Point[] segment = {p, q, r, s};
+                                Arrays.sort(segment);
+                                segment[0].drawTo(segment[segment.length - 1]);
                                 StdOut.printf("%s -> %s -> %s -> %s\n",
-                                        seg[0],
-                                        seg[1],
-                                        seg[2],
-                                        seg[3]
-                                );
+                                        segment[0],
+                                        segment[1],
+                                        segment[2],
+                                        segment[3]);
                             }
                         }
                     }

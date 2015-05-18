@@ -7,65 +7,67 @@ import java.util.Set;
 
 public class Fast {
 
-    private Set<ArrayList<Point>> results;
+    private static void findCollinearPoints(Point[] points) {
 
-    public Fast(Point[] points) {
+        Set<ArrayList<Point>> lineSegments = new HashSet<ArrayList<Point>>();
 
-        results = new HashSet<ArrayList<Point>>();
-
-        Point[] others = points.clone();
+        Point[] aux = points.clone();
 
         for (Point p : points) {
-
             // sort other points by slope wrt to p
-            Arrays.sort(others, p.SLOPE_ORDER);
+            Arrays.sort(aux, p.SLOPE_ORDER);
 
-            // look for 3+ adjacent points with same slope
-            // print each line segment as ordered sequence
-            // and draw each segment
-            int i = 0;
-            while (i < others.length) {
-
-                Point q = others[i];
-
-                // short circuit if invoking point
-                if (p == q) {
-                    continue;
-                }
-
-                double pqSlope = p.slopeTo(q);
-                ArrayList<Point> collinearPoints = new ArrayList<Point>();
-                collinearPoints.add(p); // add invoking point
-                while (p.slopeTo(others[i]) == pqSlope && (i < others.length - 1)) {
-                    collinearPoints.add(others[i]);
-                    i++;
-                }
-
-                if (collinearPoints.size() >= 4) {
-                    Collections.sort(collinearPoints);
-                    results.add(collinearPoints);
-                }
-
-                i++;
-
-            }
-
+            // aggregate collinear line segments
+            lineSegments.addAll(findCollinearPointsFor(p, aux));
         }
 
+        reportLineSegments(lineSegments);
     }
 
-    public void report() {
-        reportLineSegments(results);
+    private static Set<ArrayList<Point>> findCollinearPointsFor(
+            Point p, Point[] aux) {
+        return findCollinearPointsFor(p, aux, 1, new HashSet<ArrayList<Point>>());
     }
 
-    private void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
+    private static Set<ArrayList<Point>> findCollinearPointsFor(
+            Point p, Point[] aux, int i, Set<ArrayList<Point>> results) {
+
+        if (i > aux.length - 1) {
+            return results;
+        }
+
+        Point q = aux[i];
+
+        // short circuit if invoking point
+        if (p == q) {
+            return results;
+        }
+
+        double pqSlope = p.slopeTo(q);
+        ArrayList<Point> collinearPoints = new ArrayList<Point>();
+        collinearPoints.add(p); // add invoking point
+        int j = i;
+        while ((j < aux.length) && p.slopeTo(aux[j]) == pqSlope) {
+            collinearPoints.add(aux[j]);
+            j++;
+        }
+
+        if (collinearPoints.size() >= 4) {
+            Collections.sort(collinearPoints);
+            results.add(collinearPoints);
+        }
+
+        return findCollinearPointsFor(p, aux, j, results);
+    }
+
+    private static void reportLineSegments(Set<ArrayList<Point>> lineSegments) {
         for (ArrayList<Point> lineSegment : lineSegments) {
             printLineSegment(lineSegment);
             drawLineSegment(lineSegment);
         }
     }
 
-    private void printLineSegment(ArrayList<Point> lineSegment) {
+    private static void printLineSegment(ArrayList<Point> lineSegment) {
         String delimiter = " -> ";
         StringBuilder sb = new StringBuilder();
         Iterator iterator = lineSegment.listIterator();
@@ -79,12 +81,8 @@ public class Fast {
         StdOut.println(sb.toString());
     }
 
-    private void drawLineSegment(ArrayList<Point> lineSegment) {
-        for (int i = 0; i < lineSegment.size() - 1; i++) {
-            Point p1 = lineSegment.get(i);
-            Point p2 = lineSegment.get(i + 1);
-            p1.drawTo(p2);
-        }
+    private static void drawLineSegment(ArrayList<Point> lineSegment) {
+        Collections.min(lineSegment).drawTo(Collections.max(lineSegment));
     }
 
     private static void setupDraw() {
@@ -111,7 +109,7 @@ public class Fast {
     public static void main(String[] args) {
         setupDraw();
         Point[] points = readInput(args[0]);
-        new Fast(points).report();
+        findCollinearPoints(points);
     }
 
 }

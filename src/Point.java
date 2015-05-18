@@ -35,8 +35,9 @@ public class Point implements Comparable<Point> {
             // degenerate
             if (this.y - that.y == 0) {
                 return Double.NEGATIVE_INFINITY;
+            } else {
+                return Double.POSITIVE_INFINITY;
             }
-            return Double.POSITIVE_INFINITY;
         }
 
         // horizontal line
@@ -67,12 +68,12 @@ public class Point implements Comparable<Point> {
             double slope1 = Point.this.slopeTo(o1);
             double slope2 = Point.this.slopeTo(o2);
 
-            if (slope1 < slope2) {
-                return -1;
-            } else if (slope2 < slope1) {
+            if (slope1 > slope2) {
                 return 1;
+            } else if (slope1 < slope2) {
+                return -1;
             } else {
-                return o1.compareTo(o2);
+                return 0;
             }
         }
     }
